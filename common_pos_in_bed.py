@@ -59,9 +59,9 @@ for key,value in pos.iteritems():
     if value == 0b100:
         in1 += 1
     elif value == 0b010:
-        in2 += 2
+        in2 += 1
     elif value == 0b001:
-        in3 += 3
+        in3 += 1
     elif value == 0b110:
         in12 += 1
     elif value == 0b101:
