@@ -20,6 +20,12 @@ with open(args.inputfile) as f:
                     if float(spline[2]) > float(args.threshold):
                         printlineflag = False
                 if printlineflag:
-                    rs = "\t".join([spline[5],spline[6],spline[7],spline[0]+"_"+spline[2],"1.0",spline[8]])
+                    beginning=spline[6]
+                    end=spline[7]
+                    if spline[8]=="-":
+                        beginning=spline[7]
+                        end=spline[6]
+                    
+                    rs = "\t".join([spline[5],beginning,end,spline[0]+"_"+spline[2],"1.0",spline[8]])
                     print rs
                     
