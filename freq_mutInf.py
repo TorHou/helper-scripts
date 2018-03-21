@@ -14,38 +14,51 @@ length = 0.0
 arg_parser = argparse.ArgumentParser(description="Calculate frequencies of nucleotides and mutual information of pairs of nucleotides of a FASTA file.")
 
 arg_parser.add_argument("inputfile",help="FASTA input file")
+arg_parser.add_argument("--fixed",help="If the sequences in the input have a fixed length the mutual information will be calculated")
 
 args=arg_parser.parse_args()
+
+if args.fixed:
+    print "fixed"
+else:
+    print "not fixed"
 
 threshold = 0
 kmer_affinities={}
 kmers_many={}
 filetype = ""
 regions = {}
-counts = np.zeros((106,106))
-count = np.zeros(106)
+dim = args.fixed
+if fixed:
+    counts = np.zeros((dim,dim))
+    count = np.zeros(dim)
+
 nts = {"A","C","G","T"}
 pc = {}
 
 combos = {''.join(i) for i in (itertools.product(nts,nts))}
 
 for combo in combos:
-    pc[combo] = np.zeros((106,106))
-sc = {"A": np.zeros(106),"C": np.zeros(106), "G": np.zeros(106), "T": np.zeros(106)}
+    pc[combo] = np.zeros((dim,dim))
+sc = {"A": np.zeros(dim),"C": np.zeros(dim), "G": np.zeros(dim), "T": np.zeros(dim)}
 
 
 fasta_sequences = SeqIO.parse(open(args.inputfile),'fasta')
 for fasta in fasta_sequences:
     length += 1.0
     seq = fasta.upper()
-    for i in range(0,106):
-        char = seq[i]
-        sc[char][i] += 1.0
-        for j in range(i,106):
-            if i == j:
-                continue
-            char2=seq[j]
-            pc[char+char2][i][j] += 1.0
+    if args.fixed:
+        for i in range(0,106):
+            char = seq[i]
+            sc[char][i] += 1.0
+            for j in range(i,106):
+                if i == j:
+                    continue
+                char2=seq[j]
+                pc[char+char2][i][j] += 1.0
+    else:
+        for i in range(0,len(seq)):
+            
 
 for i in range(0,106):
     for char in sc:
