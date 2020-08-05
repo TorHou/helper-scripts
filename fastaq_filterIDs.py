@@ -11,11 +11,11 @@ arg_parser.add_argument("--format", help="[fasta*|fastq], *:default", default="f
 
 args=arg_parser.parse_args()
 
-ids={}
+ids=set()
 
 with open(args.idfile) as f:
     for line in f:
-        ids[line.rstrip()]=1
+        ids.add(line.rstrip())
 
 fastaq_sequences = SeqIO.parse(open(args.fastaqfile),args.format)
 
