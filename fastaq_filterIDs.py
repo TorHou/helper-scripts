@@ -2,24 +2,35 @@
 import argparse
 from Bio import SeqIO
 
-arg_parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser()
+parser.add_argument('--format', choices=["fasta", "fastq"], default="fasta")
+subparser = parser.add_subparsers(dest='mode')
 
-arg_parser.add_argument("fastaqfile")
-arg_parser.add_argument("idfile")
-arg_parser.add_argument("--format", help="[fasta*|fastq], *:default", default="fasta" )
+by_idfile = subparser.add_parser('idfile')
+by_pattern = subparser.add_parser('pattern')
 
-
-args=arg_parser.parse_args()
-
-ids=set()
-
-with open(args.idfile) as f:
-    for line in f:
-        ids.add(line.rstrip())
-
-fastaq_sequences = SeqIO.parse(open(args.fastaqfile),args.format)
+by_idfile.add_argument('idfile')
+by_idfile.add_argument('fastaqfile')
+by_pattern.add_argument('pattern')
+by_pattern.add_argument('fastaqfile')
 
 
-for fastaq in fastaq_sequences:
-    if fastaq.id in ids:
-        print(fastaq.format(args.format).rstrip())
+args=parser.parse_args()
+
+if args.mode == 'idfile':
+    ids=set()
+    with open(args.idfile) as f:
+        for line in f:
+            ids.add(line.rstrip())
+
+    fastaq_sequences = SeqIO.parse(open(args.fastaqfile),args.format)
+    for fastaq in fastaq_sequences:
+        if fastaq.id in ids:
+            print(fastaq.format(args.format).rstrip())
+elif args.mode == 'pattern':
+
+    fastaq_sequences = SeqIO.parse(open(args.fastaqfile),args.format)
+    for fastaq in fastaq_sequences:
+        if args.pattern in fastaq.description:
+            print(">" + fastaq.description)
+            print(str(fastaq.seq).upper())
