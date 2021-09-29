@@ -14,6 +14,6 @@ args=arg_parser.parse_args()
 with open(args.inputfile) as inf:
     for record in SeqIO.parse(inf,'fasta'):
         if args.contig == record.id:
-            print(record.seq[args.start:args.end])
+            print(record.seq[args.start-1:args.end])
 
 
