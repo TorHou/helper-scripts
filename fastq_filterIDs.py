@@ -20,7 +20,7 @@ fastq_sequences = SeqIO.parse(open(args.fastqfile),'fastq')
 
 
 for fastq in fastq_sequences:
-    if deplete:
+    if args.deplete:
         if fastq.id not in ids: print(fastq.format("fastq").rstrip())
     else: 
         if fastq.id in ids: print(fastq.format("fastq").rstrip())
